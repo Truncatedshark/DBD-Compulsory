@@ -1,0 +1,6 @@
+@Librarium.Api_HostAddress = http://localhost:5179
+
+GET {{Librarium.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
