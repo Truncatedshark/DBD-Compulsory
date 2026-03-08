@@ -19,6 +19,7 @@ public class LibrariumDbContext(DbContextOptions<LibrariumDbContext> options) : 
             b.Property(x => x.Title).IsRequired().HasMaxLength(500);
             b.HasMany(x => x.Authors)
                 .WithMany(x => x.Books);
+            b.Property(x => x.IsRetired).IsRequired().HasDefaultValue(false);
             b.Property(x => x.Isbn).IsRequired().HasMaxLength(20);
             b.HasIndex(x => x.Isbn).IsUnique();
             b.Property(x => x.PublicationYear).IsRequired();

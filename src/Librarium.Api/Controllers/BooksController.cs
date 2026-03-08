@@ -15,7 +15,8 @@ public class BooksController(LibrariumDbContext db) : ControllerBase
     {
 
         var books = await db.Books
-            .Select(b => new { 
+            .Where(b => !b.IsRetired)
+            .Select(b => new {
                 b.Id, 
                 b.Title, 
                 b.Isbn, 

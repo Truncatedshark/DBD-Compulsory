@@ -17,9 +17,11 @@ public class LoansController(LibrariumDbContext db) : ControllerBase
         if (!memberExists)
             return NotFound(new { error = $"Member {request.MemberId} not found." });
 
-        var bookExists = await db.Books.AnyAsync(b => b.Id == request.BookId);
-        if (!bookExists)
+        var book = await db.Books.FirstOrDefaultAsync(b => b.Id == request.BookId);
+        if (book is null)
             return NotFound(new { error = $"Book {request.BookId} not found." });
+        if (book.IsRetired)
+            return UnprocessableEntity(new { error = $"Book {request.BookId} is retired and cannot be loaned." });
 
         var loan = new Loan
         {
