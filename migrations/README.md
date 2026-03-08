@@ -58,3 +58,19 @@ In this case i chose to rename duplicate emails sequentially so that i could imp
 I went with a similar approach for the PhoneNumber, adding it as required and using HasDefaultValue("unknown") to make the migration work and fill-in the already existing member tables with the default unknown phonenumber, with the expectation that those users can later add their phonenumbers or be prompted to do so. This is not optimal but once all three users have updated their phonenumbers, a future migration would enable it to be reversed back to not using the unknown default as this brings uncertainty into whether or not phonenumbers are actually saved in the Database correctly.
 
 ---
+
+## V004 — Loan Status
+
+**Type of change:** Additive (non-breaking) — new `NOT NULL` column added to `Loans`; existing data backfilled from `ReturnDate`.
+
+**API impact:** `GET /api/loans/{memberId}` now includes a `status` field in the response. Adding a new field is non-breaking — the frontend team reading `returnDate` is unaffected. No versioning introduced; the existing endpoint was modified in place.
+
+**Deployment notes:** Migration must be applied before the new application code is deployed. During the window between migration and redeployment, the old code creates loans without setting `Status` explicitly — these default to `"Active"` via the C# enum default. Once the new code deploys, `Status = LoanStatus.Active` is set explicitly on loan creation.
+
+**Decisions and tradeoffs:**
+It doesnt say anywhere that ReturnDate will be made obsolete, so therefore in an additive fashion i created the Status enum inside the loan.cs and added it to my DbContext, so that the frontend developers can continue using ReturnDate until they are ready to push their new version which supports the Status enum. Regarding the current loans in the database i added two lines of SQL to the sql artifact that sets all current entries in the Loans table's status to either active or returned based on whether or not they have a return date, then in the future when the frontend developers push their new version they can support the other statuses as well. If they just read the API outputs ReturnDate then they can continue to do that as long as they want.
+
+As i cannot derive whether or not a book is lost or overdue with the data presented i only chose to populate based on what data i have which is Active or Returned based on the ReturnDate.
+
+I chose to save the status as String instead of Int due to readability even though its a less rigid datatype.
+---

@@ -46,6 +46,10 @@ public class LibrariumDbContext(DbContextOptions<LibrariumDbContext> options) : 
                 .WithMany(x => x.Loans)
                 .HasForeignKey(x => x.BookId)
                 .OnDelete(DeleteBehavior.Restrict);
+            l.Property(x => x.Status)
+                .IsRequired()
+                .HasConversion<string>()
+                .HasDefaultValueSql("'Active'");
         });
 
         modelBuilder.Entity<Author>(a =>

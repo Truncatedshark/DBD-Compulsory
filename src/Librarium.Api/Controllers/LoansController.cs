@@ -25,7 +25,8 @@ public class LoansController(LibrariumDbContext db) : ControllerBase
         {
             MemberId = request.MemberId,
             BookId = request.BookId,
-            LoanDate = DateTime.UtcNow
+            LoanDate = DateTime.UtcNow,
+            Status = LoanStatus.Active
         };
 
         db.Loans.Add(loan);
@@ -52,7 +53,8 @@ public class LoansController(LibrariumDbContext db) : ControllerBase
                 l.BookId,
                 Book = new { l.Book.Title, l.Book.Isbn },
                 l.LoanDate,
-                l.ReturnDate
+                l.ReturnDate,
+                l.Status
             })
             .ToListAsync();
 
