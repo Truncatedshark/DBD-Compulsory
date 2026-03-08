@@ -13,8 +13,15 @@ public class BooksController(LibrariumDbContext db) : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+
         var books = await db.Books
-            .Select(b => new { b.Id, b.Title, b.Isbn, b.PublicationYear })
+            .Select(b => new { 
+                b.Id, 
+                b.Title, 
+                b.Isbn, 
+                b.PublicationYear, 
+                Authors = b.Authors.Select(a => new { a.FirstName, a.LastName, a.Biography })
+ })
             .ToListAsync();
 
         return Ok(books);

@@ -8,4 +8,6 @@ public class Book
     public int PublicationYear { get; set; }
 
     public ICollection<Loan> Loans { get; set; } = [];
+    public ICollection<Author> Authors { get; set; } = [];
+
 }
