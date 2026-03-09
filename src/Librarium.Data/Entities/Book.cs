@@ -4,7 +4,7 @@ public class Book
 {
     public int Id { get; set; }
     public string Title { get; set; } = null!;
-    public string Isbn { get; set; } = null!;
+    public string? Isbn { get; set; };
     public int PublicationYear { get; set; }
     public bool IsRetired { get; set; }
 
